@@ -13,6 +13,7 @@ import { BookReviewService } from './bookreview.service';
 import { CreateBookReviewDto } from './dto/create-bookreview.dto';
 import { UpdateBookReviewDto } from './dto/update-bookreview.dto';
 import { accessTokenGuard } from 'src/auth/guard/access-token.guard';
+import { UserId } from 'src/auth/decorators/userId.decorator';
 
 @Controller('books/:bookId/reviews')
 export class BookReviewController {
@@ -21,35 +22,35 @@ export class BookReviewController {
   @UseGuards(accessTokenGuard)
   @Post()
   create(
-    @Param('bookId') bookId: number,
+    @Param('bookId') book_id: number,
     @Request() req: any,
     @Body() createBookReviewDto: CreateBookReviewDto,
   ) {
     const userId = req.user.userId; //
-    return this.bookReviewService.create(bookId, userId, createBookReviewDto);
+    return this.bookReviewService.create(book_id, userId, createBookReviewDto);
   }
 
   @Get()
-  findAll(@Param('bookId') bookId: number) {
-    return this.bookReviewService.findAll(bookId);
+  findAll(@Param('bookId') book_id: number = 1) {
+    // 1로 현재 디폴트를 준 상태
+    return this.bookReviewService.findAll(book_id);
   }
 
   @Get(':id')
-  findOne(@Param('bookId') bookId: number, @Param('id') id: number) {
-    return this.bookReviewService.findOne(bookId, id);
+  findOne(@Param('bookId') book_id: number, @Param('id') id: number) {
+    return this.bookReviewService.findOne(book_id, id);
   }
 
   @UseGuards(accessTokenGuard)
   @Put(':id')
   update(
-    @Param('bookId') bookId: number,
+    @Param('bookId') book_id: number,
     @Param('id') id: number,
-    @Request() req: any,
+    @UserId() userId: number,
     @Body() updateBookReviewDto: UpdateBookReviewDto,
   ) {
-    const userId = req.user.userId; // JWT AccessToken에서 userId 가져오기
     return this.bookReviewService.update(
-      bookId,
+      book_id,
       id,
       userId,
       updateBookReviewDto,
@@ -59,11 +60,11 @@ export class BookReviewController {
   @UseGuards(accessTokenGuard)
   @Delete(':id')
   remove(
-    @Param('bookId') bookId: number,
+    @Param('bookId') book_id: number,
     @Param('id') id: number,
     @Request() req: any,
   ) {
     const userId = req.user.userId; // JWT AccessToken에서 userId 가져오기
-    return this.bookReviewService.remove(bookId, id, userId);
+    return this.bookReviewService.remove(book_id, id, userId);
   }
 }

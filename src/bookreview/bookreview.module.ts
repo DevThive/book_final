@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
-import { BookreviewService } from './bookreview.service';
-import { BookreviewController } from './bookreview.controller';
+import { BookReviewService } from './bookreview.service';
+import { BookReviewController } from './bookreview.controller';
+import { User } from 'src/entity/user.entity';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  controllers: [BookreviewController],
-  providers: [BookreviewService],
+  imports: [TypeOrmModule.forFeature([User])],
+  controllers: [BookReviewController],
+  providers: [BookReviewService],
 })
-export class BookreviewModule {}
+export class BookReviewModule {}
+export { BookReviewService };
