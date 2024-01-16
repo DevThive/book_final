@@ -39,7 +39,7 @@ export class User {
   role: Role;
 
   @OneToMany(() => Store, (store) => store.admin, { cascade: true })
-  store: Relation<Store>[];
+  stores: Relation<Store>[];
 
   @CreateDateColumn()
   createdAt: Date;

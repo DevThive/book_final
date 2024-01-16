@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Menu } from '../entity/menu.entity';
 import { Repository } from 'typeorm';
@@ -48,7 +44,7 @@ export class MenuService {
       where: { id: storeid },
     });
 
-    if (user.store.some((s) => s.id !== store.id)) {
+    if (user.stores.some((s) => s.id !== store.id)) {
       throw new BadRequestException('소유주만 등록 및 수정이 가능합니다.');
     }
 
@@ -68,9 +64,14 @@ export class MenuService {
   ) {
     const store = await this.storeRepository.findOne({
       where: { id: storeid },
+      relations: { menus: true },
     });
 
-    await this.findmenubyId(menuid, store);
+    const menu = await this.findmenubyId(menuid);
+
+    if (store.menus.some((s) => s.id !== menu.id)) {
+      throw new BadRequestException('해당 지점 사장님만 수정이 가능합니다.');
+    }
 
     await this.menuRepository.update(
       {
@@ -88,11 +89,12 @@ export class MenuService {
   async deleteStoreMenu(storeid: number, menuid: number) {
     const store = await this.storeRepository.findOne({
       where: { id: storeid },
+      relations: { menus: true },
     });
+    const isMenu = await this.findmenubyId(menuid);
 
-    const isMenu = await this.findmenubyId(menuid, store.id);
-    if (!isMenu) {
-      throw new NotFoundException('메뉴를 찾을 수 없습니다.');
+    if (store.menus.some((s) => s.id !== isMenu.id)) {
+      throw new BadRequestException('해당 지점 사장님만 수정이 가능합니다.');
     }
 
     const result = await this.menuRepository.delete({ id: menuid });
@@ -100,9 +102,9 @@ export class MenuService {
     return result;
   }
 
-  async findmenubyId(menuid: number, store: any) {
+  async findmenubyId(menuid: number) {
     return await this.menuRepository.findOne({
-      where: { id: menuid, store: store },
+      where: { id: menuid },
     });
   }
 }
