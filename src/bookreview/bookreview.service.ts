@@ -43,10 +43,13 @@ export class BookReviewService {
     return bookreviews;
   }
 
-  findOne(book_id: number, id: number) {}
-
-  //쓴사람만 수정할수 있도록
-  //findbyid
+  //리뷰상세조회
+  async findOne(book_id: number, id: number) {
+    const bookreview = await this.bookReviewRepository.findOne({
+      where: { book_id, id },
+    });
+    return bookreview;
+  }
 
   async updateBookReview(
     id: number,
@@ -57,6 +60,10 @@ export class BookReviewService {
     const bookreviews = await this.findreviewbyId(id);
     if (!bookreviews) {
       throw new BadRequestException('리뷰가 없습니다');
+    }
+
+    if (bookreviews.user_id !== userId) {
+      throw new BadRequestException('작성자만 수정 가능합니다.');
     }
 
     const updatedReview = await this.bookReviewRepository.update(
@@ -77,6 +84,10 @@ export class BookReviewService {
 
     if (!review) {
       throw new BadRequestException('리뷰가 없습니다');
+    }
+
+    if (review.user_id !== userId) {
+      throw new BadRequestException('작성자만 삭제 가능합니다.');
     }
 
     const result = await this.bookReviewRepository.delete({ id });
