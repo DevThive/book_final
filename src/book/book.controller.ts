@@ -23,7 +23,7 @@ export class BookController {
   async getBookById(@Param('bookid') bookid: number) {
     return await this.bookService.getBookById(bookid);
   }
-  //도서 수정
+  // 도서 수정
   // @Put('/bookid')
   // async updateBook(
   //   @Param('bookid') bookid: number,
