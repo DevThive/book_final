@@ -220,6 +220,7 @@ body {
   text-align: center;
   background-color: #ffffff; /* 이부분 추가함*/
   border-radius: 30px; /* 이부분 추가함*/
+  height: 380px; /* 이부분 추가함*/
 }
 
 .album-item img {
@@ -289,6 +290,31 @@ ul#pages > li {
 
 .pagination a {
   margin: 0 5px; /* Optional margin for spacing between Prev/Next and page numbers */
+}
+
+/*store 페이지네이션*/
+.store-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; /* Optional margin for spacing from other elements */
+  background-color: #4f4f4f;
+  color: #ffffff;
+}
+
+.store-pagination a {
+  margin: 0 5px; /* Optional margin for spacing between Prev/Next and page numbers */
+}
+
+ul#storepages,
+ul#storepages li {
+  display: inline-block;
+  padding: 0;
+  cursor: pointer;
+}
+
+ul#storepages > li {
+  margin: 0px 3px;
 }
 
 .card::before {
