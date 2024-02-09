@@ -16,14 +16,14 @@ function userme() {
       },
     })
     .then(function (response) {
-      console.log(response);
+      // console.log(response);
       user = response.data;
 
       useremail.innerHTML = `<p class="fs-6">${user.email}</p>`;
       usernickname.innerHTML = `<p class="fs-6">${user.nickname}</p>`;
       userimage.src = user.photo;
       useraddress.value = user.myPage.address;
-      console.log(user.photo);
+      // console.log(user.photo);
 
       if (user.role === 0) {
         storetab.style.display = 'none';
@@ -90,6 +90,11 @@ function myprofilebtn(event) {
   } else {
     console.log('넘어가기');
   }
+
+  setTimeout(function () {
+    alert('수정완료');
+    window.location.reload();
+  }, 1000);
 }
 
 //지점 신규 등록
@@ -98,15 +103,14 @@ function myprofilebtn(event) {
 async function storebtn(event) {
   event.preventDefault();
   const createstoreaddressInput = document.getElementById('createstoreaddress');
-  const storedetailaddressInput = document.getElementById('storedetailaddress');
+  // const storedetailaddressInput = document.getElementById('storedetailaddress');
   const storenameInput = document.getElementById('storename');
   const storedescInput = document.getElementById('storedesc');
   const storeimgInput = document.getElementById('createstoreimg');
   const openingtimeInput = document.getElementById('opening-time');
   const closingtimeInput = document.getElementById('closing-time');
 
-  const resultaddress =
-    createstoreaddressInput.value + storedetailaddressInput.value;
+  const resultaddress = createstoreaddressInput.value;
 
   const addressToCoordinate = async (address) => {
     return new Promise((resolve, reject) => {
@@ -137,7 +141,7 @@ async function storebtn(event) {
   try {
     const coordinate = await addressToCoordinate(resultaddress);
 
-    console.log(coordinate);
+    // console.log(coordinate);
     const storeimgFile = storeimgInput.files[0];
 
     const formData = new FormData();
@@ -195,7 +199,7 @@ function storeinfo() {
             },
           })
           .then(function (response) {
-            console.log(response.data);
+            // console.log(response.data);
             const storeinfos = response.data;
             storeinfos.forEach((store) => {
               addstorelist(store);
@@ -227,7 +231,7 @@ function addstorelist(store) {
     <div id="storelistcard" class="card mb-3" onclick="updatemodal(${store.id})" >
       <div class="row g-0">
         <div class="col-md-4">
-          <img src="${img}" class="img-fluid rounded-start" alt="...">
+          <img src="${img}" id="storelistcardimg" class="img-fluid rounded-start" alt="...">
         </div>
         <div class="col-md-8">
           <div class="card-body">
@@ -248,7 +252,7 @@ let checkstoreid;
 function updatemodal(store) {
   $('#updatestoremodal').modal('show');
   menulist.innerHTML = '';
-  books.innerHTML = '';
+  booklist.innerHTML = '';
   reviews.innerHTML = '';
   const storename = document.getElementById('upstorename');
   const storeimg = document.getElementById('storeImage');
@@ -261,7 +265,7 @@ function updatemodal(store) {
   axios
     .get('store/' + store)
     .then(function (response) {
-      console.log(response.data[0]);
+      // console.log(response.data[0]);
       const store = response.data[0];
 
       let img = `${store.store_img}`;
@@ -278,7 +282,7 @@ function updatemodal(store) {
       opentime.value = store.store_open;
       closetime.value = store.store_close;
       checkstoreid = store.id;
-      console.log(checkstoreid);
+      // console.log(checkstoreid);
       menuinfo(checkstoreid);
       bookinfo(checkstoreid);
       reviewinfo(checkstoreid);
@@ -294,19 +298,18 @@ async function updatestorebtn(event) {
   event.preventDefault();
 
   const createstoreaddressInput2 = document.getElementById('upstoreaddress');
-  const storedetailaddressInput2 = document.getElementById(
-    'updatestoreaddress2',
-  );
+  // const storedetailaddressInput2 = document.getElementById(
+  //   'updatestoreaddress2',
+  // );
   const storenameInput = document.getElementById('upstorename');
   const storedescInput = document.getElementById('upstoredesc');
   const storeimgInput = document.getElementById('upstoreimg');
   const openingtimeInput = document.getElementById('upopening-time');
   const closingtimeInput = document.getElementById('upclosing-time');
 
-  console.log(createstoreaddressInput2, storedetailaddressInput2);
+  // console.log(createstoreaddressInput2, storedetailaddressInput2);
 
-  const resultaddress =
-    createstoreaddressInput2.value + storedetailaddressInput2.value;
+  const resultaddress = createstoreaddressInput2.value;
 
   const addressToCoordinate = async (address) => {
     return new Promise((resolve, reject) => {

@@ -35,6 +35,7 @@ function loadHeader(page) {
             <ul class="nav col col-lg-auto me-lg-5 mb-2 mb-md-0 text-center">
               <li><a href="index.html" class="nav-link px-2 text-white">HOME</a></li>
               <li><a id="introbtn" href="introduce.html" class="nav-link px-2 text-white">INTRODUCE</a></li>
+              <li><a href="map.html" class="nav-link px-2 text-white">BOOKCAFE</a></li>
             </ul>
             <form class="col-12 col-md-6 d-flex mb-3 mb-lg-0" role="search">
               <input
@@ -87,6 +88,7 @@ function loadHeader(page) {
             <ul class="nav col col-lg-auto me-lg-5 mb-2 mb-md-0 text-center">
               <li><a href="index.html" class="nav-link px-2 text-white">HOME</a></li>
               <li><a id="introbtn" href="introduce.html" class="nav-link px-2 text-white">INTRODUCE</a></li>
+              <li><a href="map.html" class="nav-link px-2 text-white">BOOKCAFE</a></li>
             </ul>
             <form class="col-12 col-md-6 d-flex mb-3 mb-lg-0" role="search">
               <input
@@ -107,12 +109,13 @@ function loadHeader(page) {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <img
-                  src="https://github.com/mdo.png"
-                  alt="mdo"
-                  width="32"
-                  height="32"
-                  class="rounded-circle"
+              <img
+                    id="userimg"
+                    src="https://github.com/mdo.png"
+                    alt="mdo"
+                    width="32"
+                    height="32"
+                    class="rounded-circle"
                 />
               </a>
               <ul
@@ -134,6 +137,7 @@ function loadHeader(page) {
             <ul class="nav col col-lg-auto me-lg-5 mb-2 mb-md-0 text-center">
               <li><a href="index.html" class="nav-link px-2 text-white">HOME</a></li>
               <li><a id="introbtn" href="introduce.html" class="nav-link px-2 text-white">INTRODUCE</a></li>
+              <li><a href="map.html" class="nav-link px-2 text-white">BOOKCAFE</a></li>
             </ul>
             <form class="col-12 col-md-6 d-flex mb-3 mb-lg-0" role="search">
               <input
@@ -154,13 +158,14 @@ function loadHeader(page) {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <img
-                  src="https://github.com/mdo.png"
-                  alt="mdo"
-                  width="32"
-                  height="32"
-                  class="rounded-circle"
-                />
+              <img
+              id="userimg"
+              src="https://github.com/mdo.png"
+              alt="mdo"
+              width="32"
+              height="32"
+              class="rounded-circle"
+          />
               </a>
               <ul
                 class="dropdown-menu text-small justify-content-end text-end text-center"

@@ -225,6 +225,7 @@ body {
   margin: 20px; /* Adjust margin as needed */
   margin-left: 13.2%;
   margin-right: 13.2%;
+  margin-bottom: 13.2%;
 }
 
 .album-store {
@@ -313,10 +314,13 @@ ul#pages > li {
 
 /*store 페이지네이션*/
 .store-pagination {
+  width: 50%;
+  border-radius: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 20px; /* Optional margin for spacing from other elements */
+  margin-left: 25%;
   background-color: #4f4f4f;
   color: #ffffff;
 }
@@ -518,4 +522,11 @@ ul#genrepages > li {
 
 #menulistcard > .g-0 .col-md-4 img {
   height: 150px;
+}
+/* 소장도서 서치바 */
+.searchBar {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 50px;
 }

@@ -17,17 +17,17 @@ function storecarddetail(storeid) {
   axios
     .get('/store/' + storeid)
     .then(function (response) {
-      console.log('response.data', response.data);
+      // console.log('response.data', response.data);
       storereview(storeid);
       menuinfo(storeid);
       bookinfo(storeid);
       const store = response.data[0];
-      console.log('store', store);
+      // console.log('store', store);
 
       storelabel.innerHTML = store.store_name;
       bodyname.innerHTML = store.store_name;
       bodyname.setAttribute('data-store-id', store.id);
-      console.log('data-store-id', store.id);
+      // console.log('data-store-id', store.id);
       bodystoredesc.innerHTML = store.store_desc;
       bodyad.innerHTML = store.store_address;
       bodyopen.innerHTML = store.store_open;
@@ -53,6 +53,7 @@ function storecarddetail(storeid) {
       console.log(error);
     });
 }
+
 const storereviewbox1 = document.getElementById('storereviewcardbox');
 function storereview(storeid) {
   axios
@@ -65,7 +66,7 @@ function storereview(storeid) {
       storeReviewcard.style.display = 'block';
       storereviewbox1.innerHTML = '';
       const comments = response.data;
-      console.log('comments', comments);
+      // console.log('comments', comments);
       comments.forEach((comment) => {
         storereviewlist(comment);
       });
@@ -99,7 +100,7 @@ async function storereviewlist(comment) {
     reviewstoreid,
     comment.id,
   );
-  console.log('adminReviews', adminReviews);
+  // console.log('adminReviews', adminReviews);
   storereviewbox1.innerHTML += `
     <div class="box-top">
   <!-- profile-box -->
@@ -162,7 +163,7 @@ async function addstorereviewbtn() {
   // 책 리뷰 부분 숨김
   storeReviewcard.style.display = 'none';
   addStoreReview.style.display = 'block';
-  console.log('reviewstoreid', reviewstoreid);
+  // console.log('reviewstoreid', reviewstoreid);
   // 전송 처리 함수
 
   function handleSubmit(event) {
@@ -186,7 +187,7 @@ async function addstorereviewbtn() {
 
   // 지점리뷰 데이터 저장
   function sendStoreFeedback(starValue, comment) {
-    console.log('starValue', starValue, 'comment', comment);
+    // console.log('starValue', starValue, 'comment', comment);
 
     axios
       .post(
@@ -221,13 +222,66 @@ async function addstorereviewbtn() {
   // submitstorereview 변수에 handleSubmit 함수 할당
   submitstorereview = handleSubmit;
 }
+
+// 영수증 리뷰 등록
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function addreceiptreview(event) {
+  event.preventDefault();
+  // 영수증 이미지
+  const receiptImg = document.getElementById('receiptimg');
+  const receiptImgFile = receiptImg.files[0];
+
+  // 영수증 댓글
+  const receiptCommentTextarea = document.getElementById(
+    'receipt-storecomment',
+  );
+  const receiptComment = receiptCommentTextarea.value;
+  // 영수증 별점
+  const receiptStarInputs = document.querySelectorAll(
+    'input[name="receipt-rate"]',
+  );
+  receiptStarInputs.forEach((input) => {
+    if (input.checked) {
+      selectedReceiptStarValue = input.id.split('-')[1];
+    }
+  });
+
+  // console.log(receiptImgFile, receiptComment, selectedReceiptStarValue);
+  const formData = new FormData();
+
+  formData.append('file', receiptImgFile);
+  formData.append('content', receiptComment);
+  formData.append('rating', selectedReceiptStarValue);
+
+  // 영수증에 데이터 저장
+  axios
+    .post(`receipts/review/` + reviewstoreid, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    })
+    .then(function () {
+      alert(
+        '등록이 성공했습니다.관리자의 검토 후 영수증 인증여부가 표시됩니다.',
+      );
+      window.location.reload();
+      //리뷰 등록 부분 초기화
+      receiptCommentTextarea.value = '';
+      selectedReceiptStarValue = null;
+    })
+    .catch(function (error) {
+      alert(error.response['data'].message);
+    });
+}
+
 // 특정 리뷰에 대한 사장님리뷰 답글 조회
 function findAdminReviewsByReview(storeid, storeReviewid) {
   return axios
     .get(`/reviews/${storeid}/${storeReviewid}/adminReview`)
     .then((response) => {
       const adminReviews = response.data;
-      console.log('adminReviews', adminReviews);
+      // console.log('adminReviews', adminReviews);
 
       return adminReviews;
     })
@@ -238,8 +292,11 @@ function findAdminReviewsByReview(storeid, storeReviewid) {
     });
 }
 
+//도서
+//
 const storebookinfo = document.getElementById('storebooklist');
 
+let userbookstoreid;
 //지점소장도서 정보
 function bookinfo(storeid) {
   storebookinfo.innerHTML = '';
@@ -253,15 +310,86 @@ function bookinfo(storeid) {
         // console.log(book);
         booklist(book);
       });
+      userbookstoreid = storeid;
     })
     .catch(function (error) {
       console.log(error);
     });
 }
 
+// 키 입력 이벤트 발생 함수
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function keyupEvent(event) {
+  const search = await document.getElementById('searchbox').value;
+
+  if (event.key === 'Enter') {
+    event.preventDefault();
+
+    if (search === '') {
+      // 검색어가 없을 때의 처리
+      storebookinfo.innerHTML = '<p>검색 결과가 없습니다.</p>';
+    } else {
+      // 서버에 검색 요청 보내기
+      axios
+        .get(`books/searchStoreBook?storeId=1&bookTitle=${search}`)
+        .then((response) => {
+          // 서버로부터 받은 도서 목록을 표시
+          // console.log('response.data', response.data);
+          const books = response.data.data;
+
+          if (books.length === 0) {
+            // 검색 결과가 없을 때의 처리
+            storebookinfo.innerHTML = '<p>검색 결과가 없습니다.</p>';
+          } else {
+            // 검색 결과가 있을 때의 처리
+            showSearchingBooks(books);
+          }
+        })
+        .catch((error) => {
+          console.error('API 요청 중 에러 발생:', error);
+        });
+    }
+  }
+}
+
+//소장도서 검색
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function mainkeyup(event) {
+  const search = await document.getElementById('searchbox').value;
+  if (search === '') {
+    event.preventDefault(); // 백스페이스 키이고 검색어가 없는 경우
+    // const bookCard = document.getElementById('bookListContainer');
+    storebookinfo.innerHTML = '';
+    bookinfo(userbookstoreid);
+  }
+}
+
+// 검색도서를 표시하는 함수
+function showSearchingBooks(books) {
+  // console.log('books', books);
+  // 도서 목록 초기화
+  storebookinfo.innerHTML = '';
+
+  // 각 도서를 도서 목록에 추가
+  books.forEach((book) => {
+    storebookinfo.innerHTML += `
+      <div class="col"> 
+            <div class="card">
+            <img src="${book.book_image}" alt="" />
+            <div class="card-body">
+              <h5 class="card-title">${book.title}</h5>
+            </div>
+          </div>
+        </div>
+    `;
+  });
+}
+
+//도서 상세정보
 function booklist(book) {
   const bookinfo = book.book;
-  console.log(book);
+  // console.log(book);
+  // console.log('bookinfo', bookinfo);
   storebookinfo.innerHTML += `
     <div id="booklistcard" class="card mb-3" >
       <div class="row g-0">
@@ -283,11 +411,14 @@ function booklist(book) {
     </div>
     `;
 }
+
+//메뉴
+//
 //메뉴 불러오기
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function menuinfo(storeid) {
   storemenuinfo.innerHTML = '';
-  console.log(storeid);
+  // console.log(storeid);
   axios
     .get('/menu/storeid/' + storeid)
     .then(function (response) {
@@ -311,7 +442,7 @@ function menulists(menu) {
 
   if (menu.food_img === '') {
     img =
-      'http://kowpic.cafe24.com/wp-content/plugins/mangboard/includes/mb-file.php?path=2019%2F12%2F05%2FF7_1196096794_test.png';
+      'https://kowpic.cafe24.com/wp-content/plugins/mangboard/includes/mb-file.php?path=2019%2F12%2F05%2FF7_1196096794_test.png';
   }
 
   storemenuinfo.innerHTML += `
@@ -332,3 +463,5 @@ function menulists(menu) {
       </div>
     </div>`;
 }
+
+loadUserLikeStores();
