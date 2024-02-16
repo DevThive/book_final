@@ -37,8 +37,8 @@ export class MapService {
       const bookList = await cafe.storebook; //보유 도서 불러오기
       let check = 0;
       //보유 도서에 키워드 존재하는지 여부 검색
-      bookList.foreach((book) => {
-        if (book.includes(keyword)) check = 1;
+      bookList.forEach((book) => {
+        if (book.includes(keyword)) check++;
       });
       if (check === 1) haveCafe.push(cafe);
     });

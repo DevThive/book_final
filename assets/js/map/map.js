@@ -1,51 +1,3 @@
-// /**
-//  *
-//  * @callback addressToCoordinateCallback
-//  */
-
-// /**
-//  *
-//  * @param {string} address
-//  * @param {addressToCoordinateCallback} callback
-//  */
-// function addressToCoordinate(address, callback) {
-//   naver.maps.Service.geocode(
-//     {
-//       query: address,
-//     },
-//     function (status, response) {
-//       if (status === naver.maps.Service.Status.ERROR) {
-//         return alert('Something Wrong!');
-//       }
-
-//       if (response.v2.meta.totalCount === 0) {
-//         return alert('totalCount' + response.v2.meta.totalCount);
-//       }
-
-//       var htmlAddresses = [],
-//         item = response.v2.addresses[0],
-//         point = new naver.maps.Point(item.x, item.y);
-
-//       if (item.roadAddress) {
-//         htmlAddresses.push('[도로명 주소] ' + item.roadAddress);
-//       }
-//       if (item.jibunAddress) {
-//         htmlAddresses.push('[지번 주소] ' + item.jibunAddress);
-//       }
-//       if (item.englishAddress) {
-//         htmlAddresses.push('[영문명 주소] ' + item.englishAddress);
-//       }
-//       callback(point);
-//     },
-//   );
-// }
-
-// function onReq(address) {
-//   addressToCoordinate(address, (point) => {
-//     map.setCenter(point);
-//     storeSearch([point[1], point[0]]);
-//   });
-// }
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let allprevPage;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -57,6 +9,27 @@ let allgotoPage;
 
 introduce();
 searchResult();
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function onkeyevent2(location, event) {
+  const search = document.getElementById('search-store-box2');
+  const result = search.value;
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    const searchStore = await axios.get(`/map/${location}/${result}`);
+    deleteCardElement();
+    let storesResult = [];
+    searchStore.forEach((element) => {
+      storesResult.push(element);
+      const x = String(element.place).slice(6, -1);
+      const y = x.split(' ');
+      latlngs.push(y[1]); //위도 경도 순서 바꾸기
+      latlngs.push(y[0]);
+      latlngs.push(element.store_name);
+    });
+    searchResult(storesResult);
+  }
+}
 
 function introduce() {
   const geo = navigator.geolocation;
@@ -219,6 +192,11 @@ async function storeSearch(location) {
   } catch (error) {
     console.log(error);
   }
+}
+
+function deleteCardElement() {
+  const output = document.getElementById('output');
+  output.innerHTML = null;
 }
 
 async function searchResult(storesResult) {
