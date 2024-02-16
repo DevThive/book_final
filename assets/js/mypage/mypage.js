@@ -1,8 +1,10 @@
 userme();
+const mypagegiftlist = document.getElementById('giftlist');
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 function userme() {
   const storetab = document.getElementById('storetab');
+  const giftbtn = document.getElementById('giftlistbtn');
 
   const userimage = document.getElementById('profileImage');
   const useraddress = document.getElementById('addressSearch');
@@ -27,7 +29,52 @@ function userme() {
 
       if (user.role === 0) {
         storetab.style.display = 'none';
+      } else {
+        giftbtn.style.display = 'none';
       }
+      giftbtn.style.display = 'block';
+      usergiftlist();
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+function usergiftlist() {
+  axios
+    .get('/giftuser', {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    })
+    .then(function (response) {
+      const giftinfo = response.data;
+
+      giftinfo.forEach((gift) => {
+        mypagegiftlist.innerHTML += `
+        <div class="card text-bg-dark bookboard">
+                  <div class="">
+                    <h5 class="card-title">${gift.gift_name}</h5>
+                    <p class="card-text">
+                     ${gift.gift_desc}
+                    </p>
+                    <p class="card-text">
+                      금액 : ${gift.gift_price}원   
+                    </p>
+                    <p class="card-text">
+                      <small>유효기간 : 1년</small>
+                    </p>
+                  </div>
+                  <button
+                    style="margin-top: 3%"
+                    class="btn btn-outline-secondary"
+                    onclick="updating()"
+                  >
+                    사용하기
+                  </button>
+                </div>
+        `;
+      });
     })
     .catch(function (error) {
       console.log(error);

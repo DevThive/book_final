@@ -34,6 +34,8 @@
 
     <title>BOOKSURFING Mainpage</title>
     <link rel="icon" href="./url/image.png" type="image/x-icon" />
+    <!-- topten css -->
+    <link rel="stylesheet" href="./css/topten.css" />
     <!-- card slide css -->
 
     <link rel="stylesheet" href="./css/card-slide.css" />
@@ -707,24 +709,25 @@
                           >
                             지점리뷰
                           </h2>
-
-                          <div
-                            id="storereviewicon"
-                            onclick="addstorereviewbtn()"
-                          >
-                            <i class="fa fa-comment"></i>&nbsp;<strong
-                              >리뷰작성</strong
+                          <div id="storereviewbox">
+                            <div
+                              id="storereviewicon"
+                              onclick="addstorereviewbtn()"
                             >
-                          </div>
+                              <i class="fa fa-comment"></i>&nbsp;<strong
+                                >리뷰작성</strong
+                              >
+                            </div>
 
-                          <div
-                            id="storereviewicon2"
-                            data-bs-target="#receiptmodal"
-                            data-bs-toggle="modal"
-                          >
-                            <i class="fa fa-comment"></i>&nbsp;<strong
-                              >영수증 작성</strong
+                            <div
+                              id="storereviewicon2"
+                              data-bs-target="#receiptmodal"
+                              data-bs-toggle="modal"
                             >
+                              <i class="fa fa-comment"></i>&nbsp;<strong
+                                >영수증 작성</strong
+                              >
+                            </div>
                           </div>
                         </div>
 
@@ -1015,10 +1018,13 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
 
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
+    <!-- 검색어 -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <!-- index js파일 -->
 
     <script src="./js/header/header.js"></script>
+
+    <script src="./js/header/topten.js"></script>
 
     <script src="./js/index.js"></script>
 

@@ -67,7 +67,7 @@ async function keyupEvent(event) {
         .get(`books/searchStoreBook?storeId=1&bookTitle=${search}`)
         .then((response) => {
           // 서버로부터 받은 도서 목록을 표시
-          console.log('response.data', response.data);
+          // console.log('response.data', response.data);
           const books = response.data.data;
 
           if (books.length === 0) {
@@ -106,8 +106,6 @@ function showSearchingBooks(books) {
   // 각 도서를 도서 목록에 추가
   books.forEach((book) => {
     storebookinfo.innerHTML += `
-
-
       <div class="col">
             <div class="card">
             <img src="${book.book_image}" alt="" />
@@ -116,9 +114,6 @@ function showSearchingBooks(books) {
             </div>
           </div>
         </div>
-  
-     
-   
     `;
   });
 }

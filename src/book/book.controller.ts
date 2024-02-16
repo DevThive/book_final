@@ -13,11 +13,12 @@ import {
 import { BookService } from './book.service';
 import { CreateBookDto } from './dto/create-book.dto';
 
-import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { accessTokenGuard } from 'src/auth/guard/access-token.guard';
 import { UserId } from 'src/auth/decorators/userId.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 
+@ApiTags('책')
 @Controller('books')
 export class BookController {
   constructor(private readonly bookService: BookService) {}
@@ -77,6 +78,18 @@ export class BookController {
   @Get('rank')
   async getBooksByRank() {
     return await this.bookService.getBooksByRank();
+  }
+
+  //인기 검색어 조회
+  @Get('getTopTenSearchTerms')
+  async getTopTenSearchTerms() {
+    return await this.bookService.getTopTenSearchTerms();
+  }
+
+  //도서 작가별 조회
+  @Get('author')
+  async getBooksByAuthor(@Query('author') author: string) {
+    return await this.bookService.getBooksByAuthor(author);
   }
 
   //도서 조회
