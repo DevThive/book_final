@@ -7,8 +7,8 @@
 1. [📄프로젝트 설명](#-프로젝트-설명)
 2. [📚기술스택](#-기술-스택)
 3. [🔧아키텍쳐](#-아키텍쳐)
-4. [🏗️ERD](#-ERD)
-5. [⚠️트러블 슈팅](#-트러블-슈팅)
+4. [🏗️ERD](#%EF%B8%8F-erd)
+5. [⚠️트러블 슈팅](#%EF%B8%8F-트러블-슈팅)
 6. [🎥시연 영상](#-시연-영상)
 7. [🍏환경 변수](#-환경-변수)
 8. [👥팀 소개](#-팀-소개)
@@ -240,7 +240,7 @@
 
 OCR 선정 이유
 
-## <img src="./assets/url/google_cloud_vision.png.jpg.jpg" alt="...">
+## <img src="./assets/url/ocr_compare.png" alt="...">
 
 OCR 중에서 비교해 보니 종합적으로 google cloud vision이 제일 적합하다고 느꼈다.
 
@@ -293,18 +293,29 @@ OCR은 사진을 텍스트로 변환 하는 것이므로 영수증에 들어갈�
  </details>
 
  <details>
-  <summary> 트러블슈팅4: <b>wkx/parser</b> (👈 Click)</summary>
+  <summary> 트러블슈팅4: <b>MySQL의 GeoJSON 미지원 이슈</b> (👈 Click)</summary>
 <br />
 
 ### 문제점
 
-TypeORM을 이용하면 MySQL에 위치값을 나타내는 형식인 Point(x, y) 값을 집어넣을 수 없는 문제
+TypeORM을 이용 시, 위치 값을 나타내는 형식 중 하나인 Point(x, y) 자료형을 MySQL에 값으로 집어넣을 수 없음
 
-### 해결방안
+### 해결방안 및 의사 결정
 
-TypeORM에서 지원하는 Queryselector를 이용해 실제 SQL 쿼리와 비슷한 형태로 값을 집어넣는 방안(wkx)
+1. TypeORM에서 지원하는 Query Builder를 이용해 Raw Query 형태로 ST_GeomFromText 명령어를 사용해 값을 집어넣는 방안을 채택함
+2. 저장된 값은 그대로 사용할 수 없는 형태로, 저장된 Point 값을 **Parser 라이브러리**를 이용해 텍스트로 변환한 이후 거리 계산 및 주변 지점 찾기 기능에 필요한 숫자 형태로 변환
 
-저장된 값을 그대로 사용할 수 없어 Point를 **Parser 라이브러리**를 이용해 거리 계산 및 주변 지점 찾기 기능 완성
+저장된 값을 그대로 사용할 수 없어 저장된 Point를 **Parser 라이브러리**를 이용해 거리 계산 및 주변 지점 찾기 기능 완성
+
+### **구현 계획**
+
+1. wkx: 다양한 형태를 지원(WKT/WKB/EWKT/EWKB/TWKB/GeoJSON)하며, 형태 변환이 자유롭고, 다른 비슷한 라이브러리에 비해 사용량이 압도적으로 많아 코드를 참고하기 용이함
+2. @terraformer/wkt: GeoJSON - WKT 두 자료형만 지원함.
+3. wellknown: 다양한 형태를 지원하는 것으로 보이나, 예시가 부족하고 이중 괄호를 사용해야 하는 구조를 가지고 있음
+
+### 예상 효과
+
+다른 DBMS로 교체하지 않고 Raw Query를 이용해 Point 값을 원활하게 저장 및 이용할 수 있음
 
 </details>
 
